@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { login as apiLogin, register as apiRegister, getMe as apiGetMe, updateProfile as apiUpdateProfile } from '../api/auth'
-import apiClient from '../api/apiClient' // <--- This must match the filename exactly!
+import { login as apiLogin, register as apiRegister, getMe as apiGetMe, updateProfile as apiUpdateProfile } from './auth'
+import apiClient from './apiClient' // <--- This must match the filename exactly!
 
 const AuthContext = createContext(null)
 
