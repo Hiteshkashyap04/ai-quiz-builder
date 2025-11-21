@@ -1,0 +1,73 @@
+/* We can re-use the login styles for the register page */
+/* This import is a CSS Modules feature called 'composes' */
+/* However, for simplicity, we'll just copy the styles. */
+/* In a real app, you might make a shared AuthForm.module.css */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4rem;
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 450px;
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  border: 1px solid #e9ecef;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #212529;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.submitButton {
+  margin-top: 1rem;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.link {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #6c757d;
+}
+.link a {
+  font-weight: 600;
+  color: #007bff;
+}

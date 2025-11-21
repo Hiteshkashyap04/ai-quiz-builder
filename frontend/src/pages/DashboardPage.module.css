@@ -1,0 +1,58 @@
+.container {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+.generateButton {
+  /* Uses global button styles */
+  text-decoration: none;
+  font-size: 1rem;
+}
+.generateButton:hover {
+  text-decoration: none;
+}
+
+.subHeader {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 1.5rem;
+}
+
+.error {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.noQuizzes {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.noQuizzes p {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}
+
+.quizGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
