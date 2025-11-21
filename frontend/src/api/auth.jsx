@@ -1,78 +1,72 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { login as apiLogin, register as apiRegister, getMe as apiGetMe, updateProfile as apiUpdateProfile } from './auth'
-import apiClient from './apiClient' // <--- This must match the filename exactly!
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+// IMPORT from the new specific API file to avoid circular dependency
+import { 
+  login as apiLogin, 
+  register as apiRegister, 
+  getMe as apiGetMe, 
+  updateProfile as apiUpdateProfile 
+} from './auth-api';
 
-const AuthContext = createContext(null)
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [token, setToken] = useState(localStorage.getItem('token'))
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const setupAuth = useCallback((accessToken) => {
-    setToken(accessToken);
-    localStorage.setItem('token', accessToken);
-    // We don't need to set the header here because apiClient interceptor handles it,
-    // but updating the state triggers re-renders.
-    setIsAuthenticated(true);
+  const fetchUser = useCallback(async () => {
+    try {
+      const response = await apiGetMe();
+      // Adjust this based on whether your API returns { data: user } or just user
+      setUser(response.data || response); 
+    } catch (error) {
+      console.error("Failed to fetch user", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const loadUser = useCallback(async () => {
-    if (token) {
-      try {
-        // setupAuth(token); 
-        const { data } = await apiGetMe();
-        setUser(data);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Failed to fetch user', error);
-        logout();
-      }
-    }
-    setIsLoading(false);
-  }, [token]);
-
   useEffect(() => {
-    loadUser();
-  }, [loadUser]);
+    fetchUser();
+  }, [fetchUser]);
 
-  const login = async (credentials) => {
-    const { data } = await apiLogin(credentials)
-    setupAuth(data.access_token);
-    await loadUser();
-    return data;
-  }
+  const login = async (data) => {
+    const response = await apiLogin(data);
+    await fetchUser();
+    return response;
+  };
 
-  const register = async (userData) => {
-    const { data } = await apiRegister(userData)
-    return data;
-  }
+  const register = async (data) => {
+    const response = await apiRegister(data);
+    await fetchUser();
+    return response;
+  };
 
   const logout = () => {
-    setUser(null)
-    setToken(null)
-    localStorage.removeItem('token')
-    setIsAuthenticated(false)
-  }
+    setUser(null);
+    // If you store tokens in localStorage, remove them here:
+    // localStorage.removeItem('token');
+    window.location.href = '/login'; 
+  };
+
+  const updateProfile = async (data) => {
+    const response = await apiUpdateProfile(data);
+    await fetchUser();
+    return response;
+  };
 
   const value = {
     user,
-    token,
-    isAuthenticated,
-    isLoading,
+    loading,
     login,
     register,
     logout,
-  }
+    updateProfile
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context 
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
