@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
@@ -10,26 +11,27 @@ const navItems = [
   { href: '/profile', label: 'Profile' },
 ];
 
-const Navbar = () => {
+export default function Navbar() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
   const initials = session?.user?.name
-    ? session.user.name
-        .split(' ')
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase())
-        .join('')
+    ? session.user.name.split(' ').filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase()).join('')
     : 'AQ';
 
   return (
     <header className="topbar">
       <Link href="/" className="brand" aria-label="AI Quiz Builder home">
-        <span className="brand-mark">{initials}</span>
-        <span className="brand-copy">
+        <span className="brand-mark">
+          {session?.user?.image ? (
+            <Image src={session.user.image} alt={initials} width={36} height={36} />
+          ) : (
+            initials
+          )}
+        </span>
+        <span className="brand-text">
           AI Quiz Builder
-          <span>Next.js + Google auth</span>
+          <small>Powered by Mistral</small>
         </span>
       </Link>
 
@@ -46,21 +48,31 @@ const Navbar = () => {
       </nav>
 
       <div className="topbar-actions">
-        {status === 'authenticated' ? (
+        {status === 'loading' ? (
+          <span className="chip">Loading...</span>
+        ) : status === 'authenticated' ? (
           <>
-            <span className="chip">{session.user?.email}</span>
-            <button type="button" className="button button-ghost" onClick={() => signOut({ callbackUrl: '/login' })}>
+            <span className="chip" style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', display: 'inline-flex' }}>
+              {session.user?.email}
+            </span>
+            <button
+              type="button"
+              className="button button-ghost button-sm"
+              onClick={() => signOut({ callbackUrl: '/login' })}
+            >
               Sign out
             </button>
           </>
         ) : (
-          <button type="button" className="button button-primary" onClick={() => signIn('google', { callbackUrl: '/' })}>
+          <button
+            type="button"
+            className="button button-primary button-sm"
+            onClick={() => signIn('google', { callbackUrl: '/' })}
+          >
             Sign in with Google
           </button>
         )}
       </div>
     </header>
-  )
+  );
 }
-
-export default Navbar

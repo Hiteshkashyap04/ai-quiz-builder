@@ -1,51 +1,31 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import styles from './QuizCard.module.css'
+import Link from 'next/link'
 
 const QuizCard = ({ quiz, onDelete }) => {
   return (
-    <div className={styles.card}>
-      <div className={styles.cardContent}>
-        <h3 className={styles.title}>{quiz.title}</h3>
-        <p className={styles.description}>
-            {quiz.description || "AI Generated Quiz"}
-        </p>
-        
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px'}}>
-            <span className={styles.topic}>
-                Topic: {quiz.title}
-            </span>
-
-            {/* SHOW BEST SCORE IF IT EXISTS */}
-            {quiz.best_score !== null && quiz.best_score !== undefined && (
-                <span style={{
-                    backgroundColor: '#d4edda', 
-                    color: '#155724', 
-                    padding: '4px 8px', 
-                    borderRadius: '6px',
-                    fontSize: '0.9rem',
-                    fontWeight: '600'
-                }}>
-                    🏆 Best: {quiz.best_score.toFixed(0)}%
-                </span>
-            )}
-        </div>
+    <article className="card">
+      <div className="card-meta">
+        <span className="chip">Created {new Date(quiz.created_at).toLocaleDateString()}</span>
+        {typeof quiz.best_score === 'number' ? (
+          <span className="chip">Best score {quiz.best_score.toFixed(1)}%</span>
+        ) : (
+          <span className="chip">No score yet</span>
+        )}
       </div>
 
-      <div className={styles.footer}>
-        <Link to={`/quiz/${quiz.id}`} className={styles.takeQuizButton}>
-          Take Quiz
+      <div className="stack">
+        <h3 className="card-title">{quiz.title}</h3>
+        <p className="card-description">{quiz.description || 'Generated quiz with AI-powered questions.'}</p>
+      </div>
+
+      <div className="card-actions">
+        <Link href={`/quiz/${quiz.id}`} className="button button-primary">
+          Take quiz
         </Link>
-        
-        <button 
-            onClick={() => onDelete(quiz.id)} 
-            className={styles.deleteButton}
-            title="Delete Quiz"
-        >
-            Delete
+        <button type="button" className="button button-danger" onClick={() => onDelete(quiz.id)}>
+          Delete
         </button>
       </div>
-    </div>
+    </article>
   )
 }
 
