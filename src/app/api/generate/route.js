@@ -11,8 +11,10 @@ function buildFallbackQuiz(topic, maxQuestions) {
 }
 
 export async function POST(request) {
+  let payload = {};
+
   try {
-    const payload = await request.json();
+    payload = await request.json();
     const topic = payload.topic || payload.prompt || payload.title || 'General knowledge';
     const maxQuestions = Number(payload.num_questions || payload.max_questions || 5);
     const apiKey = process.env.MISTRAL_API_KEY;
