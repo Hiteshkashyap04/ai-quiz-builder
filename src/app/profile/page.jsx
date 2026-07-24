@@ -1,5 +1,8 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
+import '@/lib/nextauth-env';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';

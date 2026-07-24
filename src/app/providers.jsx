@@ -1,5 +1,6 @@
 "use client";
 
+import '@/lib/nextauth-env';
 import { SessionProvider } from 'next-auth/react';
 
 export default function Providers({ children }) {

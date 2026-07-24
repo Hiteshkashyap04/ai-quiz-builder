@@ -1,8 +1,10 @@
+import './nextauth-env';
 import GoogleProvider from 'next-auth/providers/google';
 import { prisma } from './prisma';
 
 export const authOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'development-secret',
+  trustHost: true,
   session: { strategy: 'jwt' },
   providers: [
     GoogleProvider({
